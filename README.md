@@ -3,7 +3,8 @@ port_forwarding
 Port Forwarding Script Written in Python (version 2.x more than 2.6), refering to -> https://github.com/shtaxxx/portforwarding
 DATE:2013.05.29
 
-##Usage: python pf.py [options] command port_type
+###Usage: 
+python pf.py [options] command port_type
 (e.g. python pf.py open www.dyn)
 command
   open   : open a new forwarding port
