@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #******************************************************************************/
 # Port Forwarding Script Written in Python                          monotone-RK/
-#                                               Ver:1.0 Last updated 2013.04.28/
+#                                               Ver:1.0 Last updated 2013.05.29/
 #******************************************************************************/
 import os
 import re
