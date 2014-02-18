@@ -12,14 +12,14 @@ import subprocess
 from optparse import OptionParser
 
 #** Options                                                                  **/
-#******************************************************************************/  
-optparser = OptionParser() 
-optparser.add_option("-v","--version",action="store_true",dest="showversion",
-                     default=False,help="show the version")
+#******************************************************************************/
+optparser = OptionParser()
+optparser.add_option("-v", "--version", action="store_true", dest="showversion",
+                     default=False, help="show the version")
 (options, args) = optparser.parse_args()
 
 #** Usage                                                                    **/
-#******************************************************************************/  
+#******************************************************************************/
 USAGE = """## Port Forwarding Script Written in Python
 ## DATE:2013.05.29
 Usage: python pf.py [options] command port_type
@@ -27,7 +27,7 @@ Usage: python pf.py [options] command port_type
 command
   open   : open a new forwarding port
   close  : close specified forwarding port
-  reopen : re-open specified forwarding port 
+  reopen : re-open specified forwarding port
   list   : show list of all port forwardings
   status : show current status of opened port forwardings
   help   : show this page
@@ -41,7 +41,7 @@ Options:
   -v, --version  show the version"""
 
 #** Determine the ssh's destination                                          **/
-#******************************************************************************/  
+#******************************************************************************/
 INTERNAL = "username@internalserver"
 EXTERNAL = "username@gatewayserver"
 gatebase = EXTERNAL
@@ -54,25 +54,25 @@ if os.path.isfile("/etc/resolv.conf"):
             gatebase = INTERNAL
     conf.close()
 #** Loopback IP duplication for for SMB                                      **/
-#******************************************************************************/  
+#******************************************************************************/
 ip_dup = {
-    #"name":"sudo ifconfig eth0:0 local_IP localmask", 
+    #"name":"sudo ifconfig eth0:0 local_IP localmask",
     "smb0" :"sudo ifconfig lo0 alias 192.168.100.12  255.255.255.0"}
 
 #** SMB                                                                      **/
-#******************************************************************************/  
+#******************************************************************************/
 smb_ports = {
-    #"name":"ssh -f -N -L local_IP:localport:remote_IP:remoteport GATE", 
+    #"name":"ssh -f -N -L local_IP:localport:remote_IP:remoteport GATE",
     "smb0" :"ssh -f -N -L 192.168.100.12:8139:192.168.0.1:139 GATE"}
 
 #** SSH                                                                      **/
-#******************************************************************************/  
+#******************************************************************************/
 ssh_ports = {
-    #"name":"ssh -f -N -L localport:remote_IP:remoteport GATE", 
+    #"name":"ssh -f -N -L localport:remote_IP:remoteport GATE",
     "ssh0" :"ssh -f -N -L 2212:192.168.0.2:22 GATE"}
 
 #** WWW, IRC                                                                 **/
-#******************************************************************************/  
+#******************************************************************************/
 www_ports = {
     # dynamic port forwarding with SOCKS
     "dyn"  :"ssh -f -N -D 10080 GATE",
@@ -81,7 +81,7 @@ www_ports = {
     "www"  :"ssh -f -N -L 8011:192.168.0.3:80 GATE"}
 
 #** functions                                                                **/
-#******************************************************************************/  
+#******************************************************************************/
 def showVersion():
     print "Port Forwarding Script Written in Python v1.0 last upated:2013.05.29"
 
@@ -99,7 +99,7 @@ def dl(string):
     return re.sub(r"GATE", "", string)
 
 #** process                                                                  **/
-#******************************************************************************/  
+#******************************************************************************/
 if options.showversion:
     showVersion()
     sys.exit()
@@ -116,7 +116,7 @@ else:
 command = args[0]
 del args[0]
 
-ps_list = [] 
+ps_list = []
 IO = subprocess.Popen(["ps", "ax"], shell=False, stdout=subprocess.PIPE)
 for io in IO.stdout.readlines():
     if re.search(SSH, io.strip()) and re.search("(\d+)", io.strip()):
@@ -128,7 +128,7 @@ ports_list = {}
 if re.search("^open$", command) or re.search("^close$", command) or re.search("^reopen$", command) or re.search("^re$", command):
     for arg in args:
         # all ports
-        if  re.search("^all$", arg):
+        if re.search("^all$", arg):
             for key in sorted(ip_dup.keys()):
                 if "smb."+key not in dup_list:
                     dup_list["smb."+key] = ip_dup[key]
@@ -152,7 +152,7 @@ if re.search("^open$", command) or re.search("^close$", command) or re.search("^
                 if "ssh."+sshgrp1 not in ports_list:
                     ports_list["ssh."+sshgrp1] = ssh_ports[sshgrp1]
             else: print "No such port forwarding rule: ssh."+sshgrp1
-        # smb ports                   
+        # smb ports
         elif re.search("^smb$", arg) or re.search("^smb\.all$", arg):
             for key in sorted(ip_dup.keys()):
                 if "smb."+key not in dup_list:
@@ -170,7 +170,7 @@ if re.search("^open$", command) or re.search("^close$", command) or re.search("^
                 if "smb."+smbgrp1 not in ports_list:
                     ports_list["smb."+smbgrp1] = smb_ports[smbgrp1]
             else: print "No such port forwarding rule: smb."+smbgrp1
-        # www ports                   
+        # www ports
         elif re.search("^www$", arg) or re.search("^www\.all$", arg):
             for key in sorted(www_ports.keys()):
                 if "www."+key not in ports_list:
@@ -182,10 +182,10 @@ if re.search("^open$", command) or re.search("^close$", command) or re.search("^
                     ports_list["www."+wwwgrp1] = www_ports[wwwgrp1]
             else: print "No such port forwarding rule: www."+wwwgrp1
         # Selected ports are none
-        else: print "No such port forwarding rule: "+arg 
+        else: print "No such port forwarding rule: "+arg
 
 # *----- commands processes -----*
-if re.search("^open$", command): 
+if re.search("^open$", command):
     include_flag = False
     delif_list = []
     for key, value in ports_list.iteritems():
@@ -200,7 +200,7 @@ if re.search("^open$", command):
         os.system(rp(value))
     for value in sorted(ports_list.values()):
         os.system(rp(value))
-elif re.search("^close$", command): 
+elif re.search("^close$", command):
     pf = []
     for value in sorted(ports_list.values()):
         for p in ps_list:
@@ -280,6 +280,5 @@ elif re.search("^status$", command) or re.search("^st$", command):
             print "www.%s : %s" % (key, dl(value)+INTERNAL)
         elif anyinclude(ps_list, dl(value)+EXTERNAL):
             print "www.%s : %s" % (key, dl(value)+EXTERNAL)
-else: 
+else:
     print USAGE
-
