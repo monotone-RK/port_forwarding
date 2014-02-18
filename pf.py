@@ -53,6 +53,7 @@ if os.path.isfile("/etc/resolv.conf"):
         if re.search("domain\s+internaldomain.hogehoe.fugafuga.jp", l):
             gatebase = INTERNAL
     conf.close()
+
 #** Loopback IP duplication for for SMB                                      **/
 #******************************************************************************/
 ip_dup = {
