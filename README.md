@@ -2,7 +2,7 @@ port_forwarding
 ===============
 Port Forwarding Script Written in Python (version 2.7, 3.4 or later), refering to -> https://github.com/shtaxxx/portforwarding
 
-DATE:2015.09.13
+DATE:2015.09.29
 
 ###Usage: 
     python pf.py [options] command port_type
